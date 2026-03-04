@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimplyPray — Prayer Made Simple</title>
+    <meta name="description" content="A guided ACTS prayer app that transforms your prayer life. Adoration, Confession, Thanksgiving, Supplication — simply pray.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --light-green: #CFE7DD;
+            --medium-green: #7BAF9E;
+            --dark-green: #3A6F63;
+            --light-blue: #D6EAF8;
+            --off-white: #F6F7F5;
+            --soft-gray: #D9D9D9;
+            --medium-gray: #7A7A7A;
+            --dark-gray: #3F3F3F;
+            --white: #FFFFFF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--off-white);
+            color: var(--dark-gray);
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 24px 60px;
+            background: linear-gradient(180deg, var(--white) 0%, var(--off-white) 100%);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--light-green);
+            color: var(--dark-green);
+            font-size: 14px;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--dark-green);
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            display: block;
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--medium-green);
+            margin-top: 8px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--medium-gray);
+            max-width: 560px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* App Preview */
+        .app-preview {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 24px 60px;
+            flex-wrap: wrap;
+        }
+
+        .phone-frame {
+            width: 280px;
+            background: var(--white);
+            border-radius: 36px;
+            padding: 16px;
+            box-shadow: 0 20px 60px rgba(58, 111, 99, 0.15), 0 4px 12px rgba(0,0,0,0.05);
+            border: 2px solid var(--soft-gray);
+        }
+
+        .phone-screen {
+            border-radius: 24px;
+            overflow: hidden;
+            background: var(--off-white);
+        }
+
+        /* Simulated App Screens */
+        .screen-header {
+            padding: 20px 20px 12px;
+            text-align: center;
+        }
+
+        .screen-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark-green);
+        }
+
+        .screen-header p {
+            font-size: 13px;
+            color: var(--medium-gray);
+            margin-top: 4px;
+        }
+
+        .screen-body {
+            padding: 0 16px 20px;
+        }
+
+        .app-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .app-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark-green);
+            margin-bottom: 6px;
+        }
+
+        .app-card p {
+            font-size: 13px;
+            color: var(--medium-gray);
+            line-height: 1.5;
+        }
+
+        .app-btn {
+            display: block;
+            text-align: center;
+            background: var(--dark-green);
+            color: white;
+            padding: 14px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-decoration: none;
+        }
+
+        .scripture-card {
+            background: var(--light-green);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .scripture-card p {
+            font-size: 14px;
+            color: var(--dark-green);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .scripture-card .ref {
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 600;
+            margin-top: 8px;
+            display: block;
+        }
+
+        /* ACTS Step Indicator */
+        .acts-progress {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+        }
+
+        .acts-step {
+            width: 60px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--soft-gray);
+        }
+
+        .acts-step.active {
+            background: var(--dark-green);
+        }
+
+        .acts-step.done {
+            background: var(--medium-green);
+        }
+
+        .preview-links {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px 24px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .preview-link {
+            display: inline-block;
+            background: var(--white);
+            color: var(--dark-green);
+            border: 1px solid var(--soft-gray);
+            border-radius: 999px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .preview-link:hover {
+            background: var(--light-green);
+        }
+
+        /* Attribute Card (Adoration screen) */
+        .attribute-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .attribute-card .attr-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--dark-green);
+            margin-bottom: 8px;
+        }
+
+        .attribute-card .attr-def {
+            font-size: 14px;
+            color: var(--medium-gray);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .attribute-card .attr-verse {
+            font-size: 13px;
+            color: var(--dark-green);
+            font-style: italic;
+            background: var(--light-green);
+            padding: 12px;
+            border-radius: 12px;
+            line-height: 1.5;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 60px 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--dark-green);
+            margin-bottom: 40px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-item {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .feature-item h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-green);
+            margin-bottom: 8px;
+        }
+
+        .feature-item p {
+            font-size: 15px;
+            color: var(--medium-gray);
+            line-height: 1.5;
+        }
+
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            padding: 60px 24px 80px;
+        }
+
+        .cta h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark-green);
+            margin-bottom: 12px;
+        }
+
+        .cta p {
+            font-size: 16px;
+            color: var(--medium-gray);
+            margin-bottom: 32px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: var(--dark-green);
+            color: white;
+            padding: 16px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .cta-btn:hover {
+            background: #2d5a50;
+        }
+
+        /* Church Licensing Badge */
+        .church-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--light-blue);
+            color: var(--dark-green);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 16px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--medium-gray);
+            font-size: 14px;
+            border-top: 1px solid var(--soft-gray);
+        }
+
+        footer a {
+            color: var(--dark-green);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 36px; }
+            .hero h1 span { font-size: 20px; }
+            .phone-frame { width: 260px; }
+            .app-preview { gap: 32px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">Coming Soon</div>
+        <h1>
+            SimplyPray
+            <span>Prayer made simple</span>
+        </h1>
+        <p>
+            A guided prayer app built on the ACTS model — Adoration, Confession, Thanksgiving, Supplication. 
+            No distractions. No complexity. Just you and God.
+        </p>
+    </section>
+
+    <!-- App Preview - Two Phone Mockups -->
+    <section class="app-preview">
+
+        <!-- Phone 1: Home Screen -->
+        <div class="phone-frame">
+            <div class="phone-screen">
+                <div class="screen-header">
+                    <h3>Welcome to SimplyPray</h3>
+                    <p>Put your phone in Focus mode and pray.</p>
+                </div>
+                <div class="screen-body">
+                    <div class="app-btn">Simply Pray</div>
+                    <div class="app-card">
+                        <h4>Prayer Lists</h4>
+                        <p>Family, church, work, and more.</p>
+                    </div>
+                    <div class="app-card">
+                        <h4>Answered Prayers</h4>
+                        <p>Remember how God has answered.</p>
+                    </div>
+                    <div class="app-card">
+                        <h4>Browse Tags</h4>
+                        <p>Pray by topic: family, health, work...</p>
+                    </div>
+                    <div class="scripture-card">
+                        <p>"Do not be anxious about anything, but in everything by prayer and supplication with thanksgiving let your requests be made known to God."</p>
+                        <p class="ref">— Philippians 4:6</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phone 2: ACTS Flow - Adoration -->
+        <div class="phone-frame">
+            <div class="phone-screen">
+                <div class="screen-header">
+                    <h3>Adoration</h3>
+                    <p>1 of 4</p>
+                </div>
+                <div class="acts-progress">
+                    <div class="acts-step active"></div>
+                    <div class="acts-step"></div>
+                    <div class="acts-step"></div>
+                    <div class="acts-step"></div>
+                </div>
+                <div class="screen-body">
+                    <div class="attribute-card">
+                        <div class="attr-name">Faithfulness</div>
+                        <div class="attr-def">God always keeps His promises and remains true to His word through every generation.</div>
+                        <div class="attr-verse">"Your faithfulness endures to all generations; you have established the earth, and it stands fast." — Psalm 119:90</div>
+                    </div>
+                    <a href="./confession.html" class="app-btn">Next: Confession</a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="preview-links">
+        <a href="./confession.html" class="preview-link">Open Confession Preview</a>
+        <a href="./thanksgiving.html" class="preview-link">Open Thanksgiving Preview</a>
+        <a href="./supplication.html" class="preview-link">Open Supplication Preview</a>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <h2>Built for real prayer</h2>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div class="feature-icon">🙏</div>
+                <h3>ACTS Prayer Flow</h3>
+                <p>Walk through Adoration, Confession, Thanksgiving, and Supplication — a time-tested framework that transforms scattered prayers into focused worship.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📋</div>
+                <h3>Prayer Lists</h3>
+                <p>Organize requests by category — family, church, work, missions. Tag and filter so nothing falls through the cracks.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✅</div>
+                <h3>Answered Prayers</h3>
+                <p>When God answers, move it to your thanksgiving list. Build a record of faithfulness you can look back on.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⛪</div>
+                <h3>Church Licensing</h3>
+                <p>Adopt SimplyPray as your church's prayer app. Shared prayer lists, pastoral visibility, and congregation-wide prayer initiatives.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🔕</div>
+                <h3>Distraction-Free</h3>
+                <p>Built for Focus mode. No social feeds, no ads, no notifications pulling you away. Just you and God.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📖</div>
+                <h3>Scripture-Grounded</h3>
+                <p>Every section of prayer is anchored to Scripture — God's attributes, biblical confessions, and promises to fuel your prayers.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <h2>Coming to iOS soon</h2>
+        <p>Be the first to know when SimplyPray launches.</p>
+        <a href="mailto:joshua@solomonsolutions.tech?subject=SimplyPray%20Interest" class="cta-btn">Get Notified</a>
+        <div class="church-badge">
+            ⛪ Church licensing available — bring SimplyPray to your congregation
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>SimplyPray is a <a href="https://solomonsolutions.tech">Solomon Solutions</a> product. Built by a pastor, for the church.</p>
+        <p style="margin-top: 8px;">© 2026 Solomon Solutions LLC</p>
+    </footer>
+
+</body>
+</html>
