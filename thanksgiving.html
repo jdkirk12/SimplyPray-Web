@@ -1,233 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SimplyPray — Thanksgiving</title>
-    <meta name="description" content="SimplyPray Thanksgiving screen preview.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --light-green: #CFE7DD;
-            --medium-green: #7BAF9E;
-            --dark-green: #3A6F63;
-            --off-white: #F6F7F5;
-            --soft-gray: #D9D9D9;
-            --medium-gray: #7A7A7A;
-            --dark-gray: #3F3F3F;
-            --white: #FFFFFF;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SimplyPray — Thanksgiving</title>
+  <meta name="description" content="SimplyPray Thanksgiving screen preview.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F8F4EF;
+      --green-deep: #2F5C51;
+      --green-mid: #3A6F63;
+      --green-light: #CFE7DD;
+      --green-pale: #EBF5F1;
+      --ink: #1D2B27;
+      --ink-mid: #4A5C57;
+      --ink-soft: #7A8C87;
+      --white: #FFFFFF;
+      --border: #DDD8D0;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      padding: 28px 16px 56px;
+    }
+    a { text-decoration: none; color: inherit; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    .top-nav {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 8px; margin-bottom: 32px;
+    }
+    .top-nav a {
+      color: var(--green-deep);
+      border: 1px solid var(--border);
+      background: var(--white);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 13px; font-weight: 500;
+      transition: background .15s, border-color .15s;
+    }
+    .top-nav a:hover { background: var(--green-pale); border-color: var(--green-light); }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            min-height: 100vh;
-            background: radial-gradient(circle at top, #edf6f2 0%, var(--off-white) 50%, #f2f3f1 100%);
-            color: var(--dark-gray);
-            padding: 28px 16px 48px;
-        }
+    .headline {
+      text-align: center; margin-bottom: 28px;
+    }
+    .headline h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 42px; font-weight: 700; letter-spacing: -1px;
+      color: var(--green-deep); margin-bottom: 10px;
+    }
+    .headline p {
+      color: var(--ink-soft); max-width: 480px; margin: 0 auto;
+      line-height: 1.6; font-size: 16px; font-weight: 300;
+    }
 
-        .top-nav {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 24px;
-        }
+    .phone-frame {
+      width: min(340px, 100%); margin: 0 auto;
+      background: var(--white); border-radius: 36px; padding: 16px;
+      border: 1.5px solid var(--border);
+      box-shadow: 0 20px 60px rgba(47,92,81,.14), 0 4px 12px rgba(0,0,0,.04);
+    }
+    .phone-screen { border-radius: 24px; background: var(--bg); overflow: hidden; }
+    .screen-header { padding: 20px 20px 10px; text-align: center; }
+    .screen-header h2 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 24px; font-weight: 700; color: var(--green-deep); margin-bottom: 3px;
+    }
+    .screen-header p { font-size: 12px; color: var(--ink-soft); }
 
-        .top-nav a {
-            color: var(--dark-green);
-            text-decoration: none;
-            border: 1px solid var(--soft-gray);
-            background: var(--white);
-            border-radius: 999px;
-            padding: 8px 14px;
-            font-size: 13px;
-            font-weight: 600;
-        }
+    .acts-progress {
+      display: flex; justify-content: center; gap: 7px; padding: 10px 16px 14px;
+    }
+    .acts-step { width: 52px; height: 3.5px; border-radius: 2px; background: var(--border); }
+    .acts-step.done { background: var(--green-mid); opacity: .65; }
+    .acts-step.active { background: var(--green-deep); }
 
-        .headline {
-            text-align: center;
-            margin-bottom: 22px;
-        }
-
-        .headline h1 {
-            font-size: 34px;
-            color: var(--dark-green);
-            margin-bottom: 8px;
-        }
-
-        .headline p {
-            color: var(--medium-gray);
-            max-width: 520px;
-            margin: 0 auto;
-            line-height: 1.5;
-            font-size: 15px;
-        }
-
-        .phone-frame {
-            width: min(330px, 100%);
-            margin: 0 auto;
-            background: var(--white);
-            border-radius: 36px;
-            padding: 16px;
-            border: 2px solid var(--soft-gray);
-            box-shadow: 0 20px 60px rgba(58, 111, 99, 0.15), 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .phone-screen {
-            border-radius: 24px;
-            background: var(--off-white);
-            overflow: hidden;
-        }
-
-        .screen-header {
-            padding: 20px 20px 12px;
-            text-align: center;
-        }
-
-        .screen-header h2 {
-            font-size: 22px;
-            color: var(--dark-green);
-            margin-bottom: 4px;
-        }
-
-        .screen-header p {
-            font-size: 13px;
-            color: var(--medium-gray);
-        }
-
-        .acts-progress {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 16px;
-        }
-
-        .acts-step {
-            width: 60px;
-            height: 4px;
-            border-radius: 2px;
-            background: var(--soft-gray);
-        }
-
-        .acts-step.done { background: var(--medium-green); }
-        .acts-step.active { background: var(--dark-green); }
-
-        .screen-body {
-            padding: 0 16px 20px;
-        }
-
-        .gratitude-item {
-            background: var(--white);
-            border-radius: 14px;
-            padding: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            margin-bottom: 10px;
-        }
-
-        .gratitude-item h3 {
-            font-size: 15px;
-            color: var(--dark-green);
-            margin-bottom: 6px;
-        }
-
-        .gratitude-item p {
-            color: var(--medium-gray);
-            font-size: 13px;
-            line-height: 1.45;
-        }
-
-        .scripture {
-            display: block;
-            background: var(--light-green);
-            color: var(--dark-green);
-            border-radius: 12px;
-            padding: 12px;
-            margin: 12px 0;
-            font-size: 13px;
-            line-height: 1.5;
-            font-style: italic;
-        }
-
-        .actions {
-            display: grid;
-            gap: 10px;
-        }
-
-        .btn {
-            display: block;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 24px;
-            padding: 12px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .btn-primary {
-            background: var(--dark-green);
-            color: var(--white);
-        }
-
-        .btn-secondary {
-            background: var(--white);
-            color: var(--dark-green);
-            border: 1px solid var(--soft-gray);
-        }
-    </style>
+    .screen-body { padding: 0 14px 18px; }
+    .gratitude-item {
+      background: var(--white); border-radius: 14px; padding: 13px;
+      box-shadow: 0 2px 8px rgba(47,92,81,.06); margin-bottom: 9px;
+    }
+    .gratitude-item h3 {
+      font-size: 13.5px; font-weight: 600; color: var(--green-deep); margin-bottom: 5px;
+    }
+    .gratitude-item p {
+      color: var(--ink-soft); font-size: 12.5px; line-height: 1.5; font-weight: 300;
+    }
+    .scripture {
+      display: block; background: var(--green-pale);
+      border-left: 2px solid var(--green-mid);
+      border-radius: 8px; padding: 10px 12px; margin: 10px 0;
+      font-size: 12px; line-height: 1.5; font-style: italic; color: var(--green-deep);
+    }
+    .actions { display: grid; gap: 9px; }
+    .btn {
+      display: block; text-align: center; border-radius: 999px;
+      padding: 12px; font-size: 14px; font-weight: 600; font-family: inherit;
+    }
+    .btn-primary { background: var(--green-deep); color: var(--white); }
+    .btn-secondary { background: var(--white); color: var(--green-deep); border: 1.5px solid var(--border); }
+  </style>
 </head>
 <body>
-    <nav class="top-nav">
-        <a href="./index.html">Home</a>
-        <a href="./confession.html">Confession</a>
-        <a href="./thanksgiving.html">Thanksgiving</a>
-        <a href="./supplication.html">Supplication</a>
-    </nav>
+  <nav class="top-nav">
+    <a href="./index.html">Home</a>
+    <a href="./confession.html">Confession</a>
+    <a href="./thanksgiving.html">Thanksgiving</a>
+    <a href="./supplication.html">Supplication</a>
+  </nav>
 
-    <header class="headline">
-        <h1>Thanksgiving</h1>
-        <p>Remember specific gifts and answered prayers with gratitude.</p>
-    </header>
+  <header class="headline">
+    <h1>Thanksgiving</h1>
+    <p>Remember specific gifts and answered prayers with gratitude.</p>
+  </header>
 
-    <main class="phone-frame">
-        <section class="phone-screen">
-            <div class="screen-header">
-                <h2>Thanksgiving</h2>
-                <p>3 of 4</p>
-            </div>
-
-            <div class="acts-progress">
-                <div class="acts-step done"></div>
-                <div class="acts-step done"></div>
-                <div class="acts-step active"></div>
-                <div class="acts-step"></div>
-            </div>
-
-            <div class="screen-body">
-                <article class="gratitude-item">
-                    <h3>Answered Prayer</h3>
-                    <p>Dad's surgery went well and recovery is on track. Thank You for steady hands and peace in our family.</p>
-                </article>
-                <article class="gratitude-item">
-                    <h3>Daily Grace</h3>
-                    <p>Thank You for strength to finish hard work today and for kind words from a friend when I felt discouraged.</p>
-                </article>
-                <article class="gratitude-item">
-                    <h3>Spiritual Growth</h3>
-                    <p>Thank You for convicting my heart this week and helping me choose patience over frustration.</p>
-                </article>
-
-                <span class="scripture">"Give thanks in all circumstances; for this is the will of God in Christ Jesus for you." — 1 Thessalonians 5:18</span>
-
-                <div class="actions">
-                    <a class="btn btn-secondary" href="./confession.html">Back: Confession</a>
-                    <a class="btn btn-primary" href="./supplication.html">Next: Supplication</a>
-                </div>
-            </div>
-        </section>
-    </main>
+  <main class="phone-frame">
+    <section class="phone-screen">
+      <div class="screen-header">
+        <h2>Thanksgiving</h2>
+        <p>3 of 4</p>
+      </div>
+      <div class="acts-progress">
+        <div class="acts-step done"></div>
+        <div class="acts-step done"></div>
+        <div class="acts-step active"></div>
+        <div class="acts-step"></div>
+      </div>
+      <div class="screen-body">
+        <article class="gratitude-item">
+          <h3>Answered Prayer</h3>
+          <p>Dad's surgery went well and recovery is on track. Thank You for steady hands and peace in our family.</p>
+        </article>
+        <article class="gratitude-item">
+          <h3>Daily Grace</h3>
+          <p>Thank You for strength to finish hard work today and for kind words from a friend when I felt discouraged.</p>
+        </article>
+        <article class="gratitude-item">
+          <h3>Spiritual Growth</h3>
+          <p>Thank You for convicting my heart this week and helping me choose patience over frustration.</p>
+        </article>
+        <span class="scripture">"Give thanks in all circumstances; for this is the will of God in Christ Jesus for you." — 1 Thessalonians 5:18</span>
+        <div class="actions">
+          <a class="btn btn-secondary" href="./confession.html">Back: Confession</a>
+          <a class="btn btn-primary" href="./supplication.html">Next: Supplication</a>
+        </div>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
