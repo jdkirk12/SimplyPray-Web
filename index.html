@@ -695,11 +695,10 @@
     <h2 class="section-h" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(36px,4vw,54px);font-weight:600;letter-spacing:-1px;color:var(--ink);margin-bottom:14px;">Be first to pray.</h2>
     <p class="cta-desc">Join the waitlist and receive your invite the day we launch. No spam — just your spot in line.</p>
 
-    <form id="notify-form" class="email-form" action="#" method="POST" target="notify-target">
+    <form id="notify-form" class="email-form">
       <input type="email" name="email" id="notify-email" class="email-input" placeholder="you@example.com" required />
       <button type="submit" class="btn-primary" style="white-space:nowrap;">Notify Me</button>
     </form>
-    <iframe name="notify-target" style="display:none;" aria-hidden="true"></iframe>
     <p class="notify-status" id="notify-status"></p>
     <p class="form-note">By signing up, you agree to receive launch updates from SimplyPray.</p>
     <div>
@@ -732,7 +731,7 @@
 
     // Waitlist form — Google Sheets integration
     (function () {
-      var GOOGLE_SHEETS_SIGNUP_ENDPOINT = "https://script.google.com/macros/s/AKfycbydavnoOHnJv55CGN3HQTiIIPiiulKaK6wdTU90bI_0dxiMBpIaB6p8R758UykyNESgTw/exec";
+      var ENDPOINT = "https://script.google.com/macros/s/AKfycbydavnoOHnJv55CGN3HQTiIIPiiulKaK6wdTU90bI_0dxiMBpIaB6p8R758UykyNESgTw/exec";
       var form = document.getElementById("notify-form");
       var status = document.getElementById("notify-status");
       var emailInput = document.getElementById("notify-email");
@@ -740,68 +739,41 @@
 
       var submitButton = form.querySelector("button[type='submit']");
       var submitLabel = submitButton ? submitButton.textContent : "Notify Me";
-      var pendingTimer = null;
-      var awaitingResponse = false;
 
-      function setPending(isPending) {
+      function setPending(on) {
         if (!submitButton) return;
-        submitButton.disabled = isPending;
-        submitButton.textContent = isPending ? "Submitting..." : (submitLabel || "Notify Me");
+        submitButton.disabled = on;
+        submitButton.textContent = on ? "Submitting…" : submitLabel;
       }
 
-      function setStatus(message, type) {
-        status.textContent = message;
-        status.className = "notify-status";
-        if (type) status.classList.add(type);
+      function setStatus(msg, type) {
+        status.textContent = msg;
+        status.className = "notify-status" + (type ? " " + type : "");
       }
 
-      function resetPending() {
-        awaitingResponse = false;
-        if (pendingTimer) { clearTimeout(pendingTimer); pendingTimer = null; }
-        setPending(false);
-      }
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var email = emailInput ? emailInput.value.trim() : "";
+        if (!email) { setStatus("Enter a valid email address.", "error"); return; }
 
-      function endpointConfigured() {
-        return GOOGLE_SHEETS_SIGNUP_ENDPOINT &&
-          GOOGLE_SHEETS_SIGNUP_ENDPOINT.indexOf("REPLACE_WITH_") === -1;
-      }
-
-      window.addEventListener("message", function (event) {
-        if (!awaitingResponse) return;
-        if (!event || !event.data || event.data.type !== "simplypray-signup") return;
-        var origin = event.origin || "";
-        var trustedOrigin = origin.indexOf("script.google.com") !== -1 ||
-          origin.indexOf("googleusercontent.com") !== -1;
-        if (!trustedOrigin) return;
-        resetPending();
-        if (event.data.ok) {
-          form.reset();
-          setStatus(event.data.message || "Thanks. You are on the launch notification list.", "success");
-        } else {
-          setStatus(event.data.message || "Signup failed. Please try again.", "error");
-        }
-      });
-
-      form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        if (!endpointConfigured()) {
-          setStatus("Signup is not configured yet.", "error");
-          return;
-        }
-        if (!emailInput || !emailInput.value) {
-          setStatus("Enter a valid email address.", "error");
-          return;
-        }
         setStatus("", null);
-        awaitingResponse = true;
         setPending(true);
-        form.action = GOOGLE_SHEETS_SIGNUP_ENDPOINT;
-        form.submit();
-        pendingTimer = setTimeout(function () {
-          if (!awaitingResponse) return;
-          resetPending();
-          setStatus("Signup timed out. Please try again.", "error");
-        }, 12000);
+
+        fetch(ENDPOINT, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: "email=" + encodeURIComponent(email)
+        })
+        .then(function () {
+          setPending(false);
+          form.reset();
+          setStatus("You're on the list! We'll notify you when SimplyPray launches.", "success");
+        })
+        .catch(function () {
+          setPending(false);
+          setStatus("Signup failed. Please try again.", "error");
+        });
       });
     })();
   </script>
