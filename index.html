@@ -410,8 +410,34 @@
     .email-input:focus { border-color: var(--green-mid); }
     .email-input::placeholder { color: var(--ink-soft); }
     .notify-status { font-size: 14px; min-height: 20px; margin-top: 10px; }
-    .notify-status.success { color: var(--green-mid); font-weight: 600; }
     .notify-status.error { color: #b94a3b; font-weight: 500; }
+
+    /* ── Success state (replaces form on signup) ──── */
+    .signup-success {
+      display: none;
+      flex-direction: column; align-items: center; gap: 12px;
+      animation: successIn .5s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    .signup-success.visible { display: flex; }
+    @keyframes successIn {
+      from { opacity: 0; transform: translateY(16px) scale(.97); }
+      to   { opacity: 1; transform: none; }
+    }
+    .success-check {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--green-deep);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 4px;
+    }
+    .success-check svg { width: 26px; height: 26px; stroke: white; stroke-width: 2.5; fill: none; }
+    .success-heading {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(30px, 4vw, 42px); font-weight: 600;
+      color: var(--ink); letter-spacing: -.5px; line-height: 1.1;
+    }
+    .success-sub {
+      font-size: 16px; color: var(--ink-mid); font-weight: 300; max-width: 340px;
+    }
     .form-note { font-size: 13px; color: var(--ink-soft); margin-top: 10px; }
     .church-note {
       display: inline-flex; align-items: center; gap: 8px;
@@ -695,12 +721,24 @@
     <h2 class="section-h" style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(36px,4vw,54px);font-weight:600;letter-spacing:-1px;color:var(--ink);margin-bottom:14px;">Be first to pray.</h2>
     <p class="cta-desc">Join the waitlist and receive your invite the day we launch. No spam — just your spot in line.</p>
 
-    <form id="notify-form" class="email-form">
-      <input type="email" name="email" id="notify-email" class="email-input" placeholder="you@example.com" required />
-      <button type="submit" class="btn-primary" style="white-space:nowrap;">Notify Me</button>
-    </form>
-    <p class="notify-status" id="notify-status"></p>
-    <p class="form-note">By signing up, you agree to receive launch updates from SimplyPray.</p>
+    <div id="form-wrap">
+      <form id="notify-form" class="email-form">
+        <input type="email" name="email" id="notify-email" class="email-input" placeholder="you@example.com" required />
+        <button type="submit" class="btn-primary" style="white-space:nowrap;">Notify Me</button>
+      </form>
+      <p class="notify-status" id="notify-status"></p>
+      <p class="form-note">By signing up, you agree to receive launch updates from SimplyPray.</p>
+    </div>
+
+    <div class="signup-success" id="signup-success">
+      <div class="success-check">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <p class="success-heading">You're on the list.</p>
+      <p class="success-sub">We'll send your invite the day SimplyPray launches. See you then.</p>
+    </div>
     <div>
       <span class="church-note">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -730,14 +768,13 @@
     document.querySelectorAll('.fade-up').forEach(function (el) { observer.observe(el); });
 
     // Waitlist form — Google Sheets via fetch (no-cors)
-    // NOTE: Google Apps Script sets X-Frame-Options: SAMEORIGIN, which blocks
-    // the iframe/postMessage pattern on any non-Google origin. fetch no-cors
-    // bypasses this — the POST goes through and the sheet gets written.
     (function () {
       var ENDPOINT = "https://script.google.com/macros/s/AKfycbyuotZlpocl2OhWuOpcaQKpPMMhYOXHgGdSviqI1pFtQLOOYTv0kUjhyVV2hNdmNAjBMQ/exec";
+      var formWrap = document.getElementById("form-wrap");
       var form = document.getElementById("notify-form");
       var status = document.getElementById("notify-status");
       var emailInput = document.getElementById("notify-email");
+      var successEl = document.getElementById("signup-success");
       if (!form || !status) return;
 
       var submitButton = form.querySelector("button[type='submit']");
@@ -752,6 +789,11 @@
       function setStatus(msg, type) {
         status.textContent = msg;
         status.className = "notify-status" + (type ? " " + type : "");
+      }
+
+      function showSuccess() {
+        if (formWrap) formWrap.style.display = "none";
+        if (successEl) successEl.classList.add("visible");
       }
 
       form.addEventListener("submit", function (e) {
@@ -769,9 +811,7 @@
           body: "email=" + encodeURIComponent(email) + "&source=simplypray.io"
         })
         .then(function () {
-          setPending(false);
-          form.reset();
-          setStatus("You're on the list! We'll notify you at launch.", "success");
+          showSuccess();
         })
         .catch(function () {
           setPending(false);
