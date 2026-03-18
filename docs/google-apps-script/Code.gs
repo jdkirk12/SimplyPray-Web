@@ -24,8 +24,14 @@ function doPost(e) {
 
     return reply_(true, "Thanks. You are on the launch notification list.");
   } catch (err) {
-    return reply_(false, "Signup failed. Please try again.");
+    Logger.log("doPost error: " + err.message);
+    return reply_(false, "Signup failed: " + err.message);
   }
+}
+
+// Also handle GET for easy browser testing: /exec?email=test@example.com&source=test
+function doGet(e) {
+  return doPost(e);
 }
 
 function getSheet_() {
@@ -54,12 +60,14 @@ function isDuplicateEmail_(sheet, email) {
   return false;
 }
 
+// ContentService returns JSON with proper CORS headers (unlike HtmlService)
 function reply_(ok, message) {
   const payload = JSON.stringify({
     type: "simplypray-signup",
     ok: ok,
     message: message
   });
-  const html = `<script>window.parent.postMessage(${payload}, "*");</script>`;
-  return HtmlService.createHtmlOutput(html);
+  return ContentService
+    .createTextOutput(payload)
+    .setMimeType(ContentService.MimeType.JSON);
 }
