@@ -33,7 +33,7 @@ export default async function MembersPage() {
 
   const { data: rpcData, error: rpcError } = await supabase.rpc(
     "get_church_members_with_email",
-    { p_church_id: membership.church_id }
+    { target_church_id: membership.church_id }
   );
 
   if (!rpcError && rpcData) {
@@ -64,7 +64,7 @@ export default async function MembersPage() {
 
       <MemberTable
         churchId={membership.church_id}
-        initialMembers={members ?? []}
+        initialMembers={(members ?? []) as Parameters<typeof MemberTable>[0]["initialMembers"]}
       />
     </div>
   );

@@ -106,7 +106,7 @@ export function MemberTable({ churchId, initialMembers }: MemberTableProps) {
     setLoading(true);
     try {
       const { data, error } = await supabase.rpc("get_church_members_with_email", {
-        p_church_id: churchId,
+        target_church_id: churchId,
       });
 
       if (!error && data) {
