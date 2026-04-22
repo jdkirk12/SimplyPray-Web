@@ -45,10 +45,13 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen bg-neutral-50">
-      <Sidebar church={church} />
+    <div className="flex h-screen bg-sanctuary-bg">
+      <Sidebar
+        church={church}
+        user={{ name: user.user_metadata?.full_name ?? null, email: user.email, role: membership.role }}
+      />
       <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-6xl px-6 py-8">{children}</div>
+        <div className="mx-auto max-w-[1200px] px-8 pt-8 pb-16 md:px-11">{children}</div>
       </main>
     </div>
   );
