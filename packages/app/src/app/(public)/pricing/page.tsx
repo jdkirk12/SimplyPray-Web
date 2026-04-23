@@ -7,12 +7,11 @@ import { PricingCard } from "@/components/pricing/pricing-card";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 
-// Placeholder Stripe price IDs — configure in Stripe dashboard later
 const PRICE_IDS = {
-  personal_monthly: "price_personal_monthly",
-  personal_annual: "price_personal_annual",
-  community_monthly: "price_community_monthly",
-  community_annual: "price_community_annual",
+  personal_monthly: "price_1TPFIqGsn91z1A7Nn2phlrGC",
+  personal_annual: "price_1TPFIrGsn91z1A7NqGl98Pey",
+  community_monthly: "price_1TPFIrGsn91z1A7N6XlisRle",
+  community_annual: "price_1TPFIsGsn91z1A7NsECg0i0v",
 };
 
 const TIERS = [
