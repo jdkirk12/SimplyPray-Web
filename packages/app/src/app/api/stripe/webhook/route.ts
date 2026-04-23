@@ -11,16 +11,12 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-/**
- * Maps Stripe price IDs to SimplyPray subscription tiers.
- * Replace placeholder IDs with actual Stripe price IDs once created.
- */
 function getTierFromPriceId(priceId: string): string {
   const tierMap: Record<string, string> = {
-    price_personal_monthly: "personal",
-    price_personal_annual: "personal",
-    price_community_monthly: "community",
-    price_community_annual: "community",
+    price_1TPFIqGsn91z1A7Nn2phlrGC: "personal",
+    price_1TPFIrGsn91z1A7NqGl98Pey: "personal",
+    price_1TPFIrGsn91z1A7N6XlisRle: "community",
+    price_1TPFIsGsn91z1A7NsECg0i0v: "community",
   };
   return tierMap[priceId] ?? "free";
 }
